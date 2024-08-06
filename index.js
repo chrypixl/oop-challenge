@@ -38,7 +38,7 @@ function init() {
             case 'Square':
                 shape = new Square();
                 break;                        
-        }
+        };
         shape.setColor(response.bgColor);
                  
         const svgObject = `
