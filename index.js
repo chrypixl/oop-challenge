@@ -20,7 +20,7 @@ const questions = [
         type: 'list',
         message: 'Please choose a shape.',
         name: 'shape',
-        choices: ['triangle', 'circle', 'square'],
+        choices: ['Triangle', 'Circle', 'Square'],
     }        
 ];
 
