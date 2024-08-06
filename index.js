@@ -1,26 +1,57 @@
 const inquirer = require('inquirer');
-const jest = require('jest');
+const fs = require('fs');
+const {Square, Triangle, Circle} = require('./lib/shapes.js');
 
-inquirer
-    .prompt ([
-        {
-            message: 'Please choose a text color.',
-            name: 'textColor',
-        },
-        {
-            message: 'Please choose a background color.',
-            name: 'bgColor',
-        },
-        {
-            type: 'list',
-            message: 'Please choose a shape.',
-            name: 'shape',
-            choices: ['triangle', 'circle', 'square'],
+const questions = [      
+    {
+        name: 'text',
+        message: 'Please enter logo text.',
+        validate: input => input.length <= 3 || 'Text must be three characters or less.'
+    },
+    {
+        message: 'Please choose a text color.',
+        name: 'textColor',
+    },
+    {
+        message: 'Please choose a background color.',
+        name: 'bgColor',
+    },
+    {
+        type: 'list',
+        message: 'Please choose a shape.',
+        name: 'shape',
+        choices: ['triangle', 'circle', 'square'],
+    }        
+];
+
+function init() {
+
+    inquirer.prompt(questions).then(response => {
+        let shape;
+        switch (response.shape) {
+            case 'Triangle':
+                shape = new Triangle();
+                break;
+            case 'Circle':
+                shape = new Circle();
+                break;
+            case 'Square':
+                shape = new Square();
+                break;                        
         }
-        
-    ])
-    .then((response) => {
-        console.log(response);
-        
-    }
-);
+        shape.setColor(response.bgColor);
+                 
+        const svgObject = `
+            <svg width="300" height="200" xmlns="http://www.w3.org/2000/svg">
+            ${shape.render()}
+            <text x="150" y="125" font-size="60" text-anchor="middle" fill="${response.textColor}">${response.text}</text>
+             </svg>
+        `;
+                    
+        fs.writeFileSync('logo.svg', svgObject);
+        console.log('Logo has been created');      
+    });
+                
+};
+
+init();
